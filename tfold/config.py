@@ -3,10 +3,10 @@
 
 #tfold data folder
 #e.g. '/data/vmikhayl/tfold-release/data'
-data_dir=#
+data_dir="data"
 
 #a tmp folder to store data from blastp alignments
-seq_tools_tmp_dir=#
+seq_tools_tmp_dir="tmp/seq_tools"
 ##########################################################################################################
 ##########################################################################################################
 ##########################################################################################################
@@ -25,9 +25,9 @@ seq_tools_data_dir=data_dir+'/seq_tools'                  #path to data
 
 #netmhc_tools
 # path to netMHCpan-4.1 and netMHCIIpan-4.1
-netmhcpanI_dir ='/home/vmikhayl/netMHCpan-4.1'  
-netmhcpanII_dir='/home/vmikhayl/netMHCIIpan-4.1'
-netmhcpanII_old_dir='/home/vmikhayl/netMHCIIpan-3.2'
+# netmhcpanI_dir ='/home/vmikhayl/netMHCpan-4.1'  
+# netmhcpanII_dir='/home/vmikhayl/netMHCIIpan-4.1'
+# netmhcpanII_old_dir='/home/vmikhayl/netMHCIIpan-3.2'
 
 #path to templates
 template_source_dir=data_dir+'/experimental_structures/processed_updated'
