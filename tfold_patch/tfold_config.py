@@ -1,16 +1,22 @@
+from inspect import currentframe, getframeinfo
+from pathlib import Path
+
+filename = getframeinfo(currentframe()).filename
+parent = Path(filename).resolve().parent.parent
+
 #Victor Mikhaylov, vmikhayl@ias.edu
 #Institute for Advanced Study, 2021-2023
 
 ### SET THESE DIRECTORIES ################################################################################
 
 #AF folder containing '/params' (AF params), e.g. '/data/vmikhayl/alphafold-multimer/databases' 
-data_dir = "../alphafold"
+data_dir = str(parent.parent / "alphafold")
 
 #AF folder containing run_alphafold.py, e.g. '/data/vmikhayl/alphafold-multimer/alphafold' 
-alphafold_dir = "../alphafold"
+alphafold_dir = str(parent.parent / "alphafold")
 
 #folder with TFold data, e.g. '/data/vmikhayl/tfold-release/data'      
-tfold_data_dir="data"
+tfold_data_dir = str(parent / "data")
 
 #path to kalign (used by AF to realign templates);
 #if you installed conda environment tfold-env, kalign should be in the /envs/tfold-env/bin/kalign in you conda folder

@@ -1,12 +1,17 @@
+from inspect import currentframe, getframeinfo
+from pathlib import Path
+
+filename = getframeinfo(currentframe()).filename
+parent = Path(filename).resolve().parent.parent
 
 ### SET THESE DIRECTORIES ################################################################################
 
 #tfold data folder
 #e.g. '/data/vmikhayl/tfold-release/data'
-data_dir="data"
+data_dir=str(parent / "data")
 
 #a tmp folder to store data from blastp alignments
-seq_tools_tmp_dir="tmp/seq_tools"
+seq_tools_tmp_dir= str(parent / "tmp/seq_tools") 
 ##########################################################################################################
 ##########################################################################################################
 ##########################################################################################################

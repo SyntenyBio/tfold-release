@@ -1,4 +1,5 @@
 #!/bin/bash
+parent_path=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
 
 input_file=$1
 working_dir=$2
@@ -12,6 +13,6 @@ do
     esac
 done
 
-python model_pmhcs.py $input_file $working_dir $DATE
-python tfold_run_alphafold.py --inputs $working_dir/inputs/input.pckl --output_dir $working_dir/outputs
-python collect_results.py $working_dir
+python $parent_path/model_pmhcs.py $input_file $working_dir $DATE
+python $parent_path/tfold_run_alphafold.py --inputs $working_dir/inputs/input.pckl --output_dir $working_dir/outputs
+python $parent_path/collect_results.py $working_dir
