@@ -2,4 +2,5 @@ scripts/
 data/
 tmp/
 .*
+*.pckl
 __pycache__/
