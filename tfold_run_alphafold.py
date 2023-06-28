@@ -38,6 +38,7 @@ from alphafold.data import templates
 from alphafold.model import config
 from alphafold.model import model
 import numpy as np
+import h5py
 
 from alphafold.model import data
 # Internal import (7716).
@@ -136,6 +137,19 @@ def predict_structure(sequences,msas,template_hits,renumber_list,
         unrelaxed_pdb_path=os.path.join(output_dir,f'structure_{model_name}_{current_id}.pdb')
         with open(unrelaxed_pdb_path,'w') as f:
             f.write(unrelaxed_pdb_renumbered)                 
+
+        # save single representations in H5 format
+        pmhc_id = os.path.basename(output_dir)
+        with h5py.File(f'alphafold-representations.h5', 'a') as file:
+
+            if pmhc_id not in file:
+                data = file.create_dataset(pmhc_id, shape=(5, *prediction_result['representations']['single'].shape), dtype=np.float16)
+                data[:] = np.nan
+            else :
+                data = file[pmhc_id]
+
+            data[int(current_id),:,:] = prediction_result['representations']['single'].astype(np.float16)
+
     logging.info('Final timings for %s: %s', current_id, timings)
     #timings_output_path=os.path.join(output_dir,f'timings_{current_id}.json')
     #with open(timings_output_path, 'w') as f:
