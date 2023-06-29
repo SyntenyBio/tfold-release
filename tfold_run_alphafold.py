@@ -143,7 +143,7 @@ def predict_structure(sequences,msas,template_hits,renumber_list,
         with h5py.File(f'alphafold-representations.h5', 'a') as file:
 
             if pmhc_id not in file:
-                data = file.create_dataset(pmhc_id, shape=(5, *prediction_result['representations']['single'].shape), dtype=np.float16)
+                data = file.create_dataset(pmhc_id, shape=(6, *prediction_result['representations']['single'].shape), dtype=np.float16)
                 data[:] = np.nan
             else :
                 data = file[pmhc_id]
