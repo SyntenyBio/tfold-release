@@ -13,6 +13,7 @@ dependencies:
   - bioconda::kalign2=2.04
   - pip 
   - pip:
+    - tqdm==4.65.0
     - absl-py==0.13.0
     - chex==0.0.7
     - dm-haiku==0.0.4
