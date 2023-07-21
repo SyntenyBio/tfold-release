@@ -16,6 +16,7 @@
 # limitations under the License.
 
 import sys
+from tqdm import tqdm
 from tfold_patch.tfold_config import data_dir,mmcif_dir,kalign_binary_path,af_params,alphafold_dir
 sys.path.append(alphafold_dir) #path to AlphaFold for import
 
@@ -43,7 +44,7 @@ import h5py
 from alphafold.model import data
 # Internal import (7716).
 
-logging.set_verbosity(logging.INFO)
+logging.set_verbosity(logging.ERROR)
 
 import tfold_patch.tfold_pipeline as pipeline
 import tfold_patch.postprocessing as postprocessing
@@ -160,7 +161,6 @@ def predict_structure(sequences,msas,template_hits,renumber_list,
     #    f.write(json.dumps(timings,indent=4))
 
 def main(argv):    
-    t_start=time.time()    
     with open(FLAGS.inputs,'rb') as f:
         inputs=pickle.load(f)            #list of dicts [{param_name : value_for_input_0},..]     
     if len(inputs)==0:
@@ -192,7 +192,7 @@ def main(argv):
     if random_seed is None:
         random_seed = random.randrange(sys.maxsize // len(model_names))
     logging.info('Using random seed %d for the data pipeline',random_seed)  
-    for x in inputs:
+    for x in tqdm(inputs):
         sequences        =x['sequences']            #(seq_chain1,seq_chain2,..)
         msas             =x['msas']                 #list of dicts {chain_number:path to msa in a3m format,..}
         template_hits    =x['template_hits']        #list of dicts for template hits
@@ -205,9 +205,6 @@ def main(argv):
                           current_id=current_id,output_dir=output_dir_target,                          
                           data_pipeline=data_pipeline,model_runners=model_runners,
                           benchmark=FLAGS.benchmark,random_seed=random_seed,true_pdb=true_pdb)
-    t_delta=time.time()-t_start
-    print('Processed {:3d} inputs in {:4.1f} minutes.'.format(len(inputs),t_delta/60))
-    print('time per input: {:5.1f}'.format(t_delta/len(inputs)))    
 
 if __name__ == '__main__':
     flags.mark_flags_as_required(['inputs','output_dir'])
