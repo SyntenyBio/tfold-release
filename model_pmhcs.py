@@ -12,7 +12,6 @@ if __name__=='__main__':
     parser.add_argument('--date_cutoff',type=str,default=None,help='Optionally, date cutoff for templates, YYYY-MM-DD.')
     args=parser.parse_args() 
     df_to_model=pd.read_csv(args.input)
-    print(f'Need to model {len(df_to_model)} pMHCs.')
     working_dir=args.working_dir
     date_cutoff=args.date_cutoff                        
     #make numbered MHC objects and run seqnn
@@ -20,7 +19,6 @@ if __name__=='__main__':
 
     #make AF inputs
     af_inputs=make_inputs.make_inputs(df_to_model,date_cutoff=date_cutoff,print_stats=False)
-    print('total AF models to be produced:',len(af_inputs))
 
     #make folders
     input_dir=working_dir+'/inputs'

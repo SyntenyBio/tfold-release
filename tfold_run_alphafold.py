@@ -192,7 +192,7 @@ def main(argv):
     if random_seed is None:
         random_seed = random.randrange(sys.maxsize // len(model_names))
     logging.info('Using random seed %d for the data pipeline',random_seed)  
-    for x in tqdm(inputs):
+    for x in tqdm(inputs, desc='AlphaFold Predictions'):
         sequences        =x['sequences']            #(seq_chain1,seq_chain2,..)
         msas             =x['msas']                 #list of dicts {chain_number:path to msa in a3m format,..}
         template_hits    =x['template_hits']        #list of dicts for template hits

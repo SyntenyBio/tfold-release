@@ -229,7 +229,6 @@ def prepare_mhc_objects(df):
         print('Aligning MHC sequences.')
         f,k=map_one_mhc_seq,'MHC sequence'
     elif 'MHC allele' in df:
-        print('Retrieving MHC objects from alleles.')
         f,k=map_one_mhc_allele,'MHC allele'  
     else:
         raise ValueError('Cannot find columns "MHC allele" or "MHC sequence" in input data.')

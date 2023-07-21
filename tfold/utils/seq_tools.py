@@ -574,7 +574,6 @@ def load_mhcs(species_list=None,use_pickle=True):
         use_pickle=False
     pckl_filename=data_dir+'/MHC/MHC.pckl'    
     if os.path.isfile(pckl_filename) and use_pickle:
-        print('MHC loading from MHC.pckl. To update the pickle file, set use_pickle to False')
         with open(pckl_filename,'rb') as f:
             mhcs,mhcs_df=pickle.load(f)
     else:
@@ -596,7 +595,6 @@ def load_mhcs(species_list=None,use_pickle=True):
         if species_list is None:        
             with open(pckl_filename,'wb') as f:
                 pickle.dump((mhcs,mhcs_df),f)
-    print('loaded {} MHC sequences in {:4.1f} s'.format(len(mhcs),time.time()-t0))
 
 #MHC reconstruction
 def mhc_from_seq(seq,species=None,target=None,return_boundaries=False,rename_by_g_region=True):

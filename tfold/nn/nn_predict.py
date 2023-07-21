@@ -47,7 +47,6 @@ def predict(df,cl,mhc_as_obj=False,model_list=None,params_dir=None,weights_dir=N
     #do inference    
     #use logkd, not kd in names!    
     model_list_full=list(params_all.keys())
-    print(f'making Kd predictions for {len(df)} pmhcs...')
     for k in model_list_full:
         params=params_all[k]
         model_func=getattr(tfold_models,params['model'])        
