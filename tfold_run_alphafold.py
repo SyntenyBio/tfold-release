@@ -140,20 +140,20 @@ def predict_structure(sequences,msas,template_hits,renumber_list,
             f.write(unrelaxed_pdb_renumbered)                 
 
         # save single representations in H5 format
-        pmhc_id = os.path.basename(output_dir)
-        with h5py.File(f'alphafold-representations.h5', 'a') as file:
+        # pmhc_id = os.path.basename(output_dir)
+        # with h5py.File(f'alphafold-representations.h5', 'a') as file:
 
-            if pmhc_id not in file:
-                file.create_dataset(pmhc_id,
-                    data=prediction_result['representations']['single'].astype(np.float16),
-                    shape=(1, *prediction_result['representations']['single'].shape),
-                    maxshape=(None, *prediction_result['representations']['single'].shape),
-                    chunks=(1, *prediction_result['representations']['single'].shape),
-                    dtype=np.float16)
-            else :
-                data = file[pmhc_id]
-                data.resize((data.shape[0] + 1, *data.shape[1:]))
-                data[-1,:,:] = prediction_result['representations']['single'].astype(np.float16)
+        #     if pmhc_id not in file:
+        #         file.create_dataset(pmhc_id,
+        #             data=prediction_result['representations']['single'].astype(np.float16),
+        #             shape=(1, *prediction_result['representations']['single'].shape),
+        #             maxshape=(None, *prediction_result['representations']['single'].shape),
+        #             chunks=(1, *prediction_result['representations']['single'].shape),
+        #             dtype=np.float16)
+        #     else :
+        #         data = file[pmhc_id]
+        #         data.resize((data.shape[0] + 1, *data.shape[1:]))
+        #         data[-1,:,:] = prediction_result['representations']['single'].astype(np.float16)
 
     logging.info('Final timings for %s: %s', current_id, timings)
     #timings_output_path=os.path.join(output_dir,f'timings_{current_id}.json')
