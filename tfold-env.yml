@@ -4,7 +4,7 @@ channels:
   - defaults
 dependencies:
   - python=3.8
-  - numpy=1.19
+  - numpy=1.24.3
   - scipy=1.7
   - pandas==1.4.*
   - cudnn=8.2
@@ -16,12 +16,12 @@ dependencies:
     - tqdm==4.65.0
     - absl-py==0.13.0
     - chex==0.0.7
-    - dm-haiku==0.0.4
+    - dm-haiku==0.0.10
     - dm-tree==0.1.6
     - immutabledict==2.0.0
     - jax==0.2.24
     - ml-collections==0.1.0
-    - tensorflow==2.5
-    - tensorflow-cpu==2.5
-    - jaxlib==0.1.69+cuda111
+    - tensorflow==2.13
+    - tensorflow-cpu==2.13
+    - jaxlib==0.4.13+cuda12 cudnn89
     - -f https://storage.googleapis.com/jax-releases/jax_cuda_releases.html
