@@ -29,8 +29,7 @@ import random
 import time
 from typing import Dict, Union, Optional
 
-from absl import app
-from absl import flags
+import argparse
 from absl import logging
 from alphafold.common import protein
 from alphafold.common import residue_constants
@@ -48,19 +47,6 @@ logging.set_verbosity(logging.ERROR)
 
 import tfold_patch.tfold_pipeline as pipeline
 import tfold_patch.postprocessing as postprocessing
-
-flags.DEFINE_string('inputs',None,'path to a .pkl input file with a list of inputs')
-flags.DEFINE_string('output_dir',None,'where to put outputs')
-flags.DEFINE_boolean('benchmark', False, 'Run multiple JAX model evaluations '
-                     'to obtain a timing that excludes the compilation time, '
-                     'which should be more indicative of the time required for '
-                     'inferencing many proteins.')
-flags.DEFINE_integer('random_seed', None, 'The random seed for the data '
-                     'pipeline. By default, this is randomly generated. Note '
-                     'that even if this is set, Alphafold may still not be '
-                     'deterministic, because processes like GPU inference are '
-                     'nondeterministic.')
-FLAGS = flags.FLAGS
 
 MAX_TEMPLATE_HITS=20            #default 20; later reduced to 4 anyway (?)
 MAX_TEMPLATE_DATE='9999-12-31'  #set no limit here
@@ -160,12 +146,12 @@ def predict_structure(sequences,msas,template_hits,renumber_list,
     #with open(timings_output_path, 'w') as f:
     #    f.write(json.dumps(timings,indent=4))
 
-def main(argv):    
-    with open(FLAGS.inputs,'rb') as f:
+def main(inputs:str,output_dir:str,benchmark:bool=False,random_seed:Optional[int]=None):    
+    with open(inputs,'rb') as f:
         inputs=pickle.load(f)            #list of dicts [{param_name : value_for_input_0},..]     
     if len(inputs)==0:
         raise ValueError('input list of zero length provided')
-    output_dir=FLAGS.output_dir
+
     logging.info(f'processing {len(inputs)} inputs...')           
     #set parameters#   
     params=af_params #from tfold.config
@@ -188,7 +174,7 @@ def main(argv):
         model_runner=model.RunModel(model_config,model_params)
         model_runners[model_name]=model_runner
     logging.info('Have %d models: %s',len(model_runners),list(model_runners.keys()))
-    random_seed=FLAGS.random_seed
+
     if random_seed is None:
         random_seed = random.randrange(sys.maxsize // len(model_names))
     logging.info('Using random seed %d for the data pipeline',random_seed)  
@@ -204,8 +190,15 @@ def main(argv):
         predict_structure(sequences=sequences,msas=msas,template_hits=template_hits,renumber_list=renumber_list,
                           current_id=current_id,output_dir=output_dir_target,                          
                           data_pipeline=data_pipeline,model_runners=model_runners,
-                          benchmark=FLAGS.benchmark,random_seed=random_seed,true_pdb=true_pdb)
+                          benchmark=benchmark,random_seed=random_seed,true_pdb=true_pdb)
 
 if __name__ == '__main__':
-    flags.mark_flags_as_required(['inputs','output_dir'])
-    app.run(main)
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument('--inputs', type=str, required=True, help='path to a .pkl input file with a list of inputs')
+    parser.add_argument('--output_dir', type=str, required=True, help='where to put outputs')
+    parser.add_argument('--benchmark', action='store_true', default=False, help='Run multiple JAX model evaluations to obtain a timing that excludes the compilation time, which should be more indicative of the time required for inferencing many proteins.')
+    parser.add_argument('--random_seed', type=int, default=None, help='The random seed for the data pipeline. By default, this is randomly generated. Note that even if this is set, Alphafold may still not be deterministic, because processes like GPU inference are nondeterministic.')
+    
+    args = parser.parse_args()
+    main(**vars(args))

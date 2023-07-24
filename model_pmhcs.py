@@ -3,17 +3,9 @@ from argparse import ArgumentParser
 import pandas as pd
 from tfold.modeling import make_inputs
 
-if __name__=='__main__':               
-    parser=ArgumentParser()
-    parser.add_argument('input',type=str, 
-                         help='Path to input csv file with columns "pep" and "MHC allele" or "MHC sequence", and optionally, "pmhc_id", "pdb_id", and "exclude_pdb". (See details.ipynb for the details.)')    
-    parser.add_argument('working_dir',type=str,
-                        help='Path to a directory where AlphaFold inputs and outputs will be stored')
-    parser.add_argument('--date_cutoff',type=str,default=None,help='Optionally, date cutoff for templates, YYYY-MM-DD.')
-    args=parser.parse_args() 
-    df_to_model=pd.read_csv(args.input)
-    working_dir=args.working_dir
-    date_cutoff=args.date_cutoff                        
+def main(input:str, working_dir:str, date_cutoff:str=None):
+    df_to_model=pd.read_csv(input)
+
     #make numbered MHC objects and run seqnn
     df_to_model=make_inputs.preprocess_df(df_to_model)
 
@@ -31,10 +23,12 @@ if __name__=='__main__':
     with open(input_dir+'/input.pckl','wb') as f: 
         pickle.dump(af_inputs,f) 
     df_to_model.to_pickle(working_dir+'/target_df.pckl')
-    
-    #input_dir=os.path.abspath(input_dir)
-    #output_dir=os.path.abspath(output_dir)
-    #print('#############################################################')
-    #print('Next, run tfold_run_alphafold.py on a GPU as follows:')
-    #print(f'python tfold_run_alphafold.py --inputs {input_dir}/input.pckl --output_dir {output_dir}') 
-    #print('#############################################################')
+
+if __name__=='__main__':
+    parser=ArgumentParser()
+    parser.add_argument('input',type=str,help='Path to input csv file with columns "pep" and "MHC allele" or "MHC sequence", and optionally, "pmhc_id", "pdb_id", and "exclude_pdb". (See details.ipynb for the details.)')    
+    parser.add_argument('working_dir',type=str,help='Path to a directory where AlphaFold inputs and outputs will be stored')
+    parser.add_argument('--date_cutoff',type=str,default=None,help='Optionally, date cutoff for templates, YYYY-MM-DD.')
+
+    args=parser.parse_args()
+    main(**vars(args))
